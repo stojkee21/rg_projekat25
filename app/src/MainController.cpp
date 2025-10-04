@@ -4,9 +4,13 @@
 #include <engine/core/Engine.hpp>
 #include "../include/MainController.h"
 
+#include <GuiController.hpp>
+
 #include "spdlog/spdlog.h"
 
 #include <engine/graphics/GraphicsController.hpp>
+
+#include "../../engine/test/app/include/app/GUIController.hpp"
 
 namespace app {
     class MainPlatformEventObserver : public engine::platform::PlatformEventObserver {
@@ -15,25 +19,27 @@ namespace app {
     };
 
     void MainPlatformEventObserver::on_mouse_move(engine::platform::MousePosition position) {
-        auto camera = engine::core::Controller::get<engine::graphics::GraphicsController>()->camera();
+        auto gui_controller = engine::core::Controller::get<GUIController>();
+        if (!gui_controller->is_enabled()) {
+            static bool first_mouse = true;
+            static double last_x    = 0.0;
+            static double last_y    = 0.0;
 
-        static bool first_mouse = true;
-        static double last_x    = 0.0;
-        static double last_y    = 0.0;
+            if (first_mouse) {
+                last_x      = position.x;
+                last_y      = position.y;
+                first_mouse = false;
+            }
 
-        if (first_mouse) {
-            last_x      = position.x;
-            last_y      = position.y;
-            first_mouse = false;
+            float xoffset = position.x - last_x;
+            float yoffset = last_y - position.y; // obrnuto jer y ide odozgo nadole
+
+            last_x = position.x;
+            last_y = position.y;
+
+            auto camera = engine::core::Controller::get<engine::graphics::GraphicsController>()->camera();
+            camera->rotate_camera(xoffset, yoffset);
         }
-
-        float xoffset = position.x - last_x;
-        float yoffset = last_y - position.y; // obrnuto jer y ide odozgo nadole
-
-        last_x = position.x;
-        last_y = position.y;
-
-        camera->rotate_camera(xoffset, yoffset);
     }
 
     void MainController::initialize() {
@@ -80,6 +86,11 @@ namespace app {
     }
 
     void MainController::update_camera() {
+        auto gui_controller = engine::core::Controller::get<GUIController>();
+        if (gui_controller->is_enabled()) {
+            return;
+        }
+
         auto platform = engine::core::Controller::get<engine::platform::PlatformController>();
         auto graphics = engine::core::Controller::get<engine::graphics::GraphicsController>();
         auto camera   = graphics->camera();
