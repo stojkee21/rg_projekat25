@@ -5,6 +5,11 @@
         "path": "apartment/Apartment.obj",
         "flip_uvs": false
       }
+    },
+    "skyboxes": {
+      "my_sky": {
+        "path": "my_sky"
+      }
     }
   },
   "window": {

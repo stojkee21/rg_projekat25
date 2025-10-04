@@ -7,25 +7,25 @@
 #include "engine/core/Controller.hpp"
 
 namespace app {
+    class MainController : public engine::core::Controller {
+        void initialize() override;
 
-class MainController : public engine::core::Controller {
-    void initialize() override;
+        bool loop() override;
 
-    bool loop() override;
+        void draw_police_station();
 
-    void draw_police_station();
+        void begin_draw() override;
 
-    void begin_draw() override;
+        void draw() override;
 
-    void draw() override;
+        void end_draw() override;
 
-    void end_draw() override;
+        void draw_skybox();
 
-    void update_camera();
+        void update_camera();
 
-    void update() override;
-};
-
-}// namespace app
+        void update() override;
+    };
+} // namespace app
 
 #endif//MATF_RG_PROJECT_MAINCONTROLLER_H
