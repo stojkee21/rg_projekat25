@@ -1,8 +1,8 @@
 {
   "resources": {
     "models": {
-      "police_station": {
-        "path": "police_station/model.obj",
+      "apartment": {
+        "path": "apartment/Apartment.obj",
         "flip_uvs": false
       }
     }
