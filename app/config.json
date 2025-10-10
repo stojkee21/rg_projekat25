@@ -1,9 +1,9 @@
 {
   "resources": {
     "models": {
-      "apartment": {
-        "path": "apartment/Apartment.obj",
-        "flip_uvs": false
+      "farm_house": {
+        "path": "farm_house/FarmHouse.obj",
+        "flip_uvs": true
       }
     },
     "skyboxes": {

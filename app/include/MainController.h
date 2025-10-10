@@ -12,7 +12,7 @@ namespace app {
 
         bool loop() override;
 
-        void draw_police_station();
+        void draw_model();
 
         void begin_draw() override;
 
@@ -21,6 +21,8 @@ namespace app {
         void end_draw() override;
 
         void draw_skybox();
+
+        void draw_lights();
 
         void update_camera();
 

@@ -62,12 +62,13 @@ namespace app {
         return true; // nastavi normalno
     }
 
-    void MainController::draw_police_station() {
+    void MainController::draw_model() {
         auto resources = engine::core::Controller::get<engine::resources::ResourcesController>();
         auto graphics  = engine::core::Controller::get<engine::graphics::GraphicsController>();
 
         // Model
-        engine::resources::Model *apartment = resources->model("apartment");
+        //engine::resources::Model *apartment = resources->model("apartment");
+        engine::resources::Model *apartment = resources->model("farm_house");
         // Shader
         engine::resources::Shader *shader = resources->shader("basic");
 
@@ -128,9 +129,35 @@ namespace app {
         graphics->draw_skybox(shader, skybox);
     }
 
+    void MainController::draw_lights() {
+        auto resources = engine::core::Controller::get<engine::resources::ResourcesController>();
+        auto shader    = resources->shader("basic");
+        auto graphics  = engine::core::Controller::get<engine::graphics::GraphicsController>();
+        auto camera    = graphics->camera();
+
+        shader->use();
+        shader->set_vec3("viewPos", camera->Position);
+
+        // Directional light (Sunce)
+        shader->set_vec3("dirLight.direction", glm::vec3(-0.2f, -1.0f, -0.3f));
+        shader->set_vec3("dirLight.ambient", glm::vec3(0.2f, 0.2f, 0.2f));
+        shader->set_vec3("dirLight.diffuse", glm::vec3(0.5f, 0.5f, 0.5f));
+        shader->set_vec3("dirLight.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+
+        // Point light (sijalica)
+        shader->set_vec3("pointLight.position", glm::vec3(0.0f, 2.0f, 2.0f));
+        shader->set_vec3("pointLight.ambient", glm::vec3(0.05f));
+        shader->set_vec3("pointLight.diffuse", glm::vec3(0.8f));
+        shader->set_vec3("pointLight.specular", glm::vec3(1.0f));
+        shader->set_float("pointLight.constant", 1.0f);
+        shader->set_float("pointLight.linear", 0.09f);
+        shader->set_float("pointLight.quadratic", 0.032f);
+    }
+
     void MainController::draw() {
-        draw_police_station();
+        draw_model();
         draw_skybox();
+        draw_lights();
     }
 
     void MainController::end_draw() {
