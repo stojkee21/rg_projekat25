@@ -77,8 +77,9 @@ namespace app {
         auto graphics  = engine::core::Controller::get<engine::graphics::GraphicsController>();
 
         // Modeli
-        engine::resources::Model *house = resources->model("farm_house");
+        engine::resources::Model *house = resources->model("house8");
         engine::resources::Model *lamp  = resources->model("lamp");
+        engine::resources::Model *floor = resources->model("stone_floor");
 
         // Shader
         engine::resources::Shader *shader = resources->shader("basic");
@@ -89,18 +90,26 @@ namespace app {
 
         // Kuća
         glm::mat4 house_model = glm::mat4(1.0f);
-        house_model           = glm::translate(house_model, glm::vec3(0.0f, 0.0f, -7.0f));
+        house_model           = glm::translate(house_model, glm::vec3(0.0f, -2.0f, -7.0f));
         house_model           = glm::scale(house_model, glm::vec3(0.3f));
         shader->set_mat4("model", house_model);
         house->draw(shader);
 
         // Lampa
-        glm::vec3 lamp_position = glm::vec3(0.5f, 1.75f, -4.7f);
+        glm::vec3 lamp_position = glm::vec3(2.1f, 1.0f, -7.0f);
         glm::mat4 lamp_model    = glm::mat4(1.0f);
         lamp_model              = glm::translate(lamp_model, lamp_position);
         lamp_model              = glm::scale(lamp_model, glm::vec3(0.4f));
         shader->set_mat4("model", lamp_model);
         lamp->draw(shader);
+
+        // Stone Floor (pod ispod kuće)
+        glm::mat4 floor_model = glm::mat4(1.0f);
+        floor_model           = glm::translate(floor_model, glm::vec3(0.5f, -2.0f, -7.0f)); // ispod kuće
+        floor_model           = glm::rotate(floor_model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+        floor_model           = glm::scale(floor_model, glm::vec3(0.3f));
+        shader->set_mat4("model", floor_model);
+        floor->draw(shader);
     }
 
     void MainController::update_camera() {
@@ -163,7 +172,7 @@ namespace app {
         shader->set_vec3("dirLight.color", glm::vec3(1.0f, 1.0f, 1.0f));
 
         // Point light
-        glm::vec3 lampPos = glm::vec3(0.5f, 1.75f, -4.7f);
+        glm::vec3 lampPos = glm::vec3(2.1f, 1.0f, -7.0f);
 
         // pritiskom tastera L - svetlo se pali/gasi
         if (lamp_on)

@@ -1,12 +1,16 @@
 {
   "resources": {
     "models": {
-      "farm_house": {
-        "path": "farm_house/FarmHouse.obj",
+      "house8": {
+        "path": "house8/highpoly_town_house_01.obj",
         "flip_uvs": true
       },
       "lamp": {
         "path": "lamp/model.obj",
+        "flip_uvs": true
+      },
+      "stone_floor": {
+        "path": "stone_floor/source/Stone_ground_01.obj",
         "flip_uvs": true
       }
     },
