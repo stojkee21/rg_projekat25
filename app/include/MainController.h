@@ -8,9 +8,12 @@
 
 namespace app {
     class MainController : public engine::core::Controller {
+    public:
         void initialize() override;
 
         bool loop() override;
+
+        void poll_events() override;
 
         void draw_model();
 
@@ -27,6 +30,9 @@ namespace app {
         void update_camera();
 
         void update() override;
+
+    private:
+        bool lamp_on = true;
     };
 } // namespace app
 

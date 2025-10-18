@@ -4,6 +4,10 @@
       "farm_house": {
         "path": "farm_house/FarmHouse.obj",
         "flip_uvs": true
+      },
+      "lamp": {
+        "path": "lamp/model.obj",
+        "flip_uvs": true
       }
     },
     "skyboxes": {

@@ -10,14 +10,13 @@
 
 #include <engine/graphics/GraphicsController.hpp>
 
-#include "../../engine/test/app/include/app/GUIController.hpp"
-
 namespace app {
     class MainPlatformEventObserver : public engine::platform::PlatformEventObserver {
     public:
         void on_mouse_move(engine::platform::MousePosition position) override;
     };
 
+    // TODO
     void MainPlatformEventObserver::on_mouse_move(engine::platform::MousePosition position) {
         auto gui_controller = engine::core::Controller::get<GUIController>();
         if (!gui_controller->is_enabled()) {
@@ -62,28 +61,46 @@ namespace app {
         return true; // nastavi normalno
     }
 
+    void MainController::poll_events() {
+        auto platform       = engine::core::Controller::get<engine::platform::PlatformController>();
+        auto gui_controller = engine::core::Controller::get<GUIController>();
+
+        // Pali/gasi lampu
+        if (platform->key(engine::platform::KeyId::KEY_L).state() == engine::platform::Key::State::JustPressed) {
+            lamp_on = !lamp_on;
+            spdlog::info("Lamp toggled: {}", lamp_on ? "ON" : "OFF");
+        }
+    }
+
     void MainController::draw_model() {
         auto resources = engine::core::Controller::get<engine::resources::ResourcesController>();
         auto graphics  = engine::core::Controller::get<engine::graphics::GraphicsController>();
 
-        // Model
-        //engine::resources::Model *apartment = resources->model("apartment");
-        engine::resources::Model *apartment = resources->model("farm_house");
+        // Modeli
+        engine::resources::Model *house = resources->model("farm_house");
+        engine::resources::Model *lamp  = resources->model("lamp");
+
         // Shader
         engine::resources::Shader *shader = resources->shader("basic");
-
         shader->use();
 
         shader->set_mat4("projection", graphics->projection_matrix());
         shader->set_mat4("view", graphics->camera()->view_matrix());
 
-        glm::mat4 model = glm::mat4(1.0f);
-        model           = glm::translate(model, glm::vec3(0.0f, 0.0f, -7.0f));
-        model           = glm::scale(model, glm::vec3(0.3f));
+        // Kuća
+        glm::mat4 house_model = glm::mat4(1.0f);
+        house_model           = glm::translate(house_model, glm::vec3(0.0f, 0.0f, -7.0f));
+        house_model           = glm::scale(house_model, glm::vec3(0.3f));
+        shader->set_mat4("model", house_model);
+        house->draw(shader);
 
-        shader->set_mat4("model", model);
-
-        apartment->draw(shader);
+        // Lampa
+        glm::vec3 lamp_position = glm::vec3(0.5f, 1.75f, -4.7f);
+        glm::mat4 lamp_model    = glm::mat4(1.0f);
+        lamp_model              = glm::translate(lamp_model, lamp_position);
+        lamp_model              = glm::scale(lamp_model, glm::vec3(0.4f));
+        shader->set_mat4("model", lamp_model);
+        lamp->draw(shader);
     }
 
     void MainController::update_camera() {
@@ -136,19 +153,25 @@ namespace app {
         auto camera    = graphics->camera();
 
         shader->use();
+
+        // Kamera i materijal
         shader->set_vec3("viewPos", camera->Position);
+        shader->set_float("shininess", 32.0f);
 
-        // Directional light (Sunce)
+        // Directional light
         shader->set_vec3("dirLight.direction", glm::vec3(-0.2f, -1.0f, -0.3f));
-        shader->set_vec3("dirLight.ambient", glm::vec3(0.2f, 0.2f, 0.2f));
-        shader->set_vec3("dirLight.diffuse", glm::vec3(0.5f, 0.5f, 0.5f));
-        shader->set_vec3("dirLight.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+        shader->set_vec3("dirLight.color", glm::vec3(1.0f, 1.0f, 1.0f));
 
-        // Point light (sijalica)
-        shader->set_vec3("pointLight.position", glm::vec3(0.0f, 2.0f, 2.0f));
-        shader->set_vec3("pointLight.ambient", glm::vec3(0.05f));
-        shader->set_vec3("pointLight.diffuse", glm::vec3(0.8f));
-        shader->set_vec3("pointLight.specular", glm::vec3(1.0f));
+        // Point light
+        glm::vec3 lampPos = glm::vec3(0.5f, 1.75f, -4.7f);
+
+        // pritiskom tastera L - svetlo se pali/gasi
+        if (lamp_on)
+            shader->set_vec3("pointLight.color", glm::vec3(1.0f, 0.9f, 0.7f));
+        else
+            shader->set_vec3("pointLight.color", glm::vec3(0.0f)); // ugašeno
+
+        shader->set_vec3("pointLight.position", lampPos);
         shader->set_float("pointLight.constant", 1.0f);
         shader->set_float("pointLight.linear", 0.09f);
         shader->set_float("pointLight.quadratic", 0.032f);
