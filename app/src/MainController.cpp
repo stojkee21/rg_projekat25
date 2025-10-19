@@ -16,7 +16,6 @@ namespace app {
         void on_mouse_move(engine::platform::MousePosition position) override;
     };
 
-    // TODO
     void MainPlatformEventObserver::on_mouse_move(engine::platform::MousePosition position) {
         auto gui_controller = engine::core::Controller::get<GUIController>();
         if (!gui_controller->is_enabled()) {
@@ -46,8 +45,10 @@ namespace app {
 
         auto platform = engine::core::Controller::get<engine::platform::PlatformController>();
         platform->register_platform_event_observer(std::make_unique<MainPlatformEventObserver>());
+        platform->set_enable_cursor(false);
 
         engine::graphics::OpenGL::enable_depth_testing();
+        engine::graphics::OpenGL::enable_face_culling();
     }
 
     bool MainController::loop() {
@@ -55,10 +56,10 @@ namespace app {
 
         // Ako je ESC pritisnut, prekidamo petlju
         if (platform->key(engine::platform::KeyId::KEY_ESCAPE).is_down()) {
-            return false; // zaustavlja while(loop())
+            return false;
         }
 
-        return true; // nastavi normalno
+        return true;
     }
 
     void MainController::poll_events() {
@@ -72,6 +73,7 @@ namespace app {
         }
     }
 
+    // TODO: Ubaciti možda još jedan model unutar kuće
     void MainController::draw_model() {
         auto resources = engine::core::Controller::get<engine::resources::ResourcesController>();
         auto graphics  = engine::core::Controller::get<engine::graphics::GraphicsController>();
@@ -112,6 +114,7 @@ namespace app {
         floor->draw(shader);
     }
 
+    // TODO: Mouse Scroll
     void MainController::update_camera() {
         auto gui_controller = engine::core::Controller::get<GUIController>();
         if (gui_controller->is_enabled()) {
@@ -155,6 +158,7 @@ namespace app {
         graphics->draw_skybox(shader, skybox);
     }
 
+    // TODO: Možda +1 Point light u kući
     void MainController::draw_lights() {
         auto resources = engine::core::Controller::get<engine::resources::ResourcesController>();
         auto shader    = resources->shader("basic");
@@ -176,7 +180,7 @@ namespace app {
 
         // pritiskom tastera L - svetlo se pali/gasi
         if (lamp_on)
-            shader->set_vec3("pointLight.color", glm::vec3(1.0f, 0.9f, 0.7f));
+            shader->set_vec3("pointLight.color", glm::vec3(1.0f, 0.0f, 0.0f)); // 1.0f, 0.9f, 0.7f
         else
             shader->set_vec3("pointLight.color", glm::vec3(0.0f)); // ugašeno
 
