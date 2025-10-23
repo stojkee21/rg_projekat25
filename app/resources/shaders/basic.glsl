@@ -42,11 +42,11 @@ struct PointLight {
     float quadratic;
 };
 
-uniform float alpha;
 uniform sampler2D texture_diffuse1;
 
 uniform DirectionalLight dirLight;
 uniform PointLight pointLight;
+uniform PointLight pointLight2;
 
 uniform vec3 viewPos;
 uniform float shininess;
@@ -58,18 +58,25 @@ void main()
 {
     vec3 norm = normalize(Normal);
     vec3 viewDir = normalize(viewPos - FragPos);
-    vec3 textureColor = texture(texture_diffuse1, TexCoords).rgb;
+    vec4 texColor = texture(texture_diffuse1, TexCoords);
 
-    // === LIGHTING ===
+    if (texColor.a < 0.1) {
+        discard;
+    }
+
+    vec3 textureColor = texColor.rgb;
+
+    // LIGHTING
     vec3 result = vec3(0.0);
     result += calcDirectionalLight(dirLight, norm, viewDir, textureColor);
     result += calcPointLight(pointLight, norm, FragPos, viewDir, textureColor);
+    result += calcPointLight(pointLight2, norm, FragPos, viewDir, textureColor);
 
-    FragColor = vec4(result, alpha);
+    FragColor = vec4(result, texColor.a);
 }
 
 
-// === DIRECTIONAL LIGHT FUNCTION ===
+// DIRECTIONAL LIGHT
 vec3 calcDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir, vec3 textureColor)
 {
     vec3 lightDir = normalize(-light.direction);
@@ -86,7 +93,7 @@ vec3 calcDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir, vec
 }
 
 
-// === POINT LIGHT FUNCTION ===
+// POINT LIGHT
 vec3 calcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 textureColor)
 {
     vec3 lightDir = normalize(light.position - fragPos);

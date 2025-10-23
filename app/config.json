@@ -12,6 +12,10 @@
       "stone_floor": {
         "path": "stone_floor/source/Stone_ground_01.obj",
         "flip_uvs": true
+      },
+      "street_lamp": {
+        "path": "street_lamp/lamp_post.obj",
+        "flip_uvs": true
       }
     },
     "skyboxes": {

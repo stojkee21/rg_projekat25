@@ -33,6 +33,10 @@ namespace app {
 
     private:
         bool lamp_on = true;
+        // Chain light (za prvo svetlo)
+        bool chain_active = false;
+        float chain_timer = 0.0f;
+        int chain_phase   = 0; // 0 - ugašeno, 1 - crveno, 2 - plavo
     };
 } // namespace app
 

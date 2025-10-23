@@ -16,6 +16,11 @@ namespace engine::graphics {
         glFrontFace(GL_CCW);
     }
 
+    void OpenGL::enable_blending() {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    }
+
     int32_t OpenGL::shader_type_to_opengl_type(resources::ShaderType type) {
         switch (type) {
         case resources::ShaderType::Vertex: return GL_VERTEX_SHADER;

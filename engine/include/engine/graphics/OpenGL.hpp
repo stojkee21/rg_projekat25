@@ -67,6 +67,8 @@ namespace engine::graphics {
 
         static void enable_face_culling();
 
+        static void enable_blending();
+
         /**
         * @brief Converts @ref resources::ShaderType to the OpenGL shader type enum.
         * @returns GL_VERTEX_SHADER, GL_FRAGMENT_SHADER, GL_GEOMETRY_SHADER
