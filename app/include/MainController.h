@@ -32,11 +32,11 @@ namespace app {
         void update() override;
 
     private:
-        bool lamp_on = true;
+        bool m_lamp_on = true;
         // Chain light (za prvo svetlo)
-        bool chain_active = false;
-        float chain_timer = 0.0f;
-        int chain_phase   = 0; // 0 - ugašeno, 1 - crveno, 2 - plavo
+        bool m_chain_active = false;
+        float m_chain_timer = 0.0f;
+        int m_chain_phase   = 0; // 0 - ugašeno, 1 - crveno, 2 - plavo
     };
 } // namespace app
 

@@ -2,12 +2,11 @@
 // Created by nemanja on 9/24/25.
 //
 #include <engine/core/Engine.hpp>
-#include "../include/MainController.h"
+#include <MainController.h>
 
 #include <GuiController.hpp>
 #include "spdlog/spdlog.h"
 #include <engine/graphics/GraphicsController.hpp>
-#include <GLFW/glfw3.h>
 
 namespace app {
     class MainPlatformEventObserver : public engine::platform::PlatformEventObserver {
@@ -68,15 +67,15 @@ namespace app {
 
         // Pali/gasi lampu
         if (platform->key(engine::platform::KeyId::KEY_L).state() == engine::platform::Key::State::JustPressed) {
-            lamp_on = !lamp_on;
-            spdlog::info("Lamp 2 toggled: {}", lamp_on ? "ON" : "OFF");
+            m_lamp_on = !m_lamp_on;
+            spdlog::info("Lamp 2 toggled: {}", m_lamp_on ? "ON" : "OFF");
         }
 
         // Pokreće chain actions
         if (platform->key(engine::platform::KeyId::KEY_C).state() == engine::platform::Key::State::JustPressed) {
-            chain_active = true;
-            chain_phase  = 1; // crveno
-            chain_timer  = 0.0f;
+            m_chain_active = true;
+            m_chain_phase  = 1; // crveno
+            m_chain_timer  = 0.0f;
             spdlog::info("Chain light started");
         }
     }
@@ -90,7 +89,7 @@ namespace app {
         engine::resources::Model *house      = resources->model("house8");
         engine::resources::Model *lamp       = resources->model("lamp");
         engine::resources::Model *floor      = resources->model("stone_floor");
-        engine::resources::Model *lampStreet = resources->model("street_lamp");
+        engine::resources::Model *lampStreet = resources->model("lamp1");
 
         // Shader
         engine::resources::Shader *shader = resources->shader("basic");
@@ -123,10 +122,10 @@ namespace app {
         floor->draw(shader);
 
         // Street Lamp
-        glm::mat4 lampModel = glm::mat4(1.0f);
-        lampModel           = glm::translate(lampModel, glm::vec3(0.7f, -1.9f, -9.5f));
-        lampModel           = glm::scale(lampModel, glm::vec3(0.1f));
-        shader->set_mat4("model", lampModel);
+        glm::mat4 street_lamp_model = glm::mat4(1.0f);
+        street_lamp_model           = glm::translate(street_lamp_model, glm::vec3(0.7f, -1.9f, -9.5f));
+        street_lamp_model           = glm::scale(street_lamp_model, glm::vec3(0.1f));
+        shader->set_mat4("model", street_lamp_model);
         lampStreet->draw(shader);
     }
 
@@ -158,23 +157,21 @@ namespace app {
     }
 
     void MainController::update() {
+        auto platform = engine::core::Controller::get<engine::platform::PlatformController>();
         update_camera();
 
-        static float lastTime = glfwGetTime();
-        float currentTime     = glfwGetTime();
-        float deltaTime       = currentTime - lastTime;
-        lastTime              = currentTime;
+        float deltaTime = platform->dt();
 
-        if (chain_active) {
-            chain_timer += deltaTime;
+        if (m_chain_active) {
+            m_chain_timer += deltaTime;
 
-            if (chain_phase == 1 && chain_timer > 3.0f) {
-                chain_phase = 2; // posle 3s - plavo
-                chain_timer = 0.0f;
+            if (m_chain_phase == 1 && m_chain_timer > 3.0f) {
+                m_chain_phase = 2; // posle 3s - plavo
+                m_chain_timer = 0.0f;
                 spdlog::info("Chain light: BLUE");
-            } else if (chain_phase == 2 && chain_timer > 2.0f) {
-                chain_phase  = 0; // ugasi posle 2s
-                chain_active = false;
+            } else if (m_chain_phase == 2 && m_chain_timer > 2.0f) {
+                m_chain_phase  = 0; // ugasi posle 2s
+                m_chain_active = false;
                 spdlog::info("Chain light: OFF");
             }
         }
@@ -218,10 +215,10 @@ namespace app {
         shader->set_float("pointLight.quadratic", 0.032f);
 
         glm::vec3 chainColor(0.0f); //ugašeno
-        if (chain_active) {
-            if (chain_phase == 1)
+        if (m_chain_active) {
+            if (m_chain_phase == 1)
                 chainColor = glm::vec3(1.0f, 0.0f, 0.0f);
-            else if (chain_phase == 2)
+            else if (m_chain_phase == 2)
                 chainColor = glm::vec3(0.0f, 0.0f, 1.0f);
         }
 
@@ -230,7 +227,7 @@ namespace app {
         // 2. Point Light
         glm::vec3 extraLampPos = glm::vec3(0.7f, -1.9f, -9.5f);
         shader->set_vec3("pointLight2.position", extraLampPos);
-        if (lamp_on)
+        if (m_lamp_on)
             shader->set_vec3("pointLight2.color", glm::vec3(1.0f, 0.9f, 0.7f));
         else
             shader->set_vec3("pointLight2.color", glm::vec3(0.0f)); // ugašeno
