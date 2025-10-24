@@ -67,7 +67,11 @@ namespace engine::graphics {
 
         static void enable_face_culling();
 
+        static void disable_face_culling();
+
         static void enable_blending();
+
+        static void disable_blending();
 
         /**
         * @brief Converts @ref resources::ShaderType to the OpenGL shader type enum.

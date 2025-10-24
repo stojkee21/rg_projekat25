@@ -16,9 +16,17 @@ namespace engine::graphics {
         glFrontFace(GL_CCW);
     }
 
+    void OpenGL::disable_face_culling() {
+        glDisable(GL_CULL_FACE);
+    }
+
     void OpenGL::enable_blending() {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    }
+
+    void OpenGL::disable_blending() {
+        glDisable(GL_BLEND);
     }
 
     int32_t OpenGL::shader_type_to_opengl_type(resources::ShaderType type) {
