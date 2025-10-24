@@ -32,6 +32,8 @@ namespace engine::platform {
             return m_width;
         }
 
+        void set_size(int width, int height);
+
         /**
         * @brief Get the title of the window.
         */
@@ -48,7 +50,19 @@ namespace engine::platform {
             return m_handle;
         }
 
+        void set_fullscreen(bool enabled);
+
+        bool is_fullscreen() {
+            return m_is_fullscreen;
+        }
+
     private:
+        bool m_is_fullscreen = false;
+        int m_prev_x         = 100;
+        int m_prev_y         = 100;
+        int m_prev_width     = 1280;
+        int m_prev_height    = 720;
+
         GLFWwindow *m_handle{};
         int m_width{};
         int m_height{};
