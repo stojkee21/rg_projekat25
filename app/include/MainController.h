@@ -32,8 +32,7 @@ namespace app {
         void update() override;
 
     private:
-        bool m_lamp_on = true;
-        // Chain light (za prvo svetlo)
+        bool m_lamp_on      = true;
         bool m_chain_active = false;
         float m_chain_timer = 0.0f;
         int m_chain_phase   = 0; // 0 - ugašeno, 1 - crveno, 2 - plavo

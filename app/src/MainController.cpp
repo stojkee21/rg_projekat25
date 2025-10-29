@@ -113,7 +113,7 @@ namespace app {
         shader->set_mat4("model", lamp_model);
         lamp->draw(shader);
 
-        // Stone Floor (pod ispod kuće)
+        // Kameni pod (pod ispod kuće)
         glm::mat4 floor_model = glm::mat4(1.0f);
         floor_model           = glm::translate(floor_model, glm::vec3(0.5f, -2.0f, -7.0f));
         floor_model           = glm::rotate(floor_model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -121,7 +121,7 @@ namespace app {
         shader->set_mat4("model", floor_model);
         floor->draw(shader);
 
-        // Street Lamp
+        // Ulična lampa
         glm::mat4 street_lamp_model = glm::mat4(1.0f);
         street_lamp_model           = glm::translate(street_lamp_model, glm::vec3(0.7f, -1.9f, -9.5f));
         street_lamp_model           = glm::scale(street_lamp_model, glm::vec3(0.1f));
@@ -129,7 +129,6 @@ namespace app {
         lampStreet->draw(shader);
     }
 
-    // TODO: Mouse Scroll
     void MainController::update_camera() {
         auto gui_controller = engine::core::Controller::get<GUIController>();
         if (gui_controller->is_enabled()) {
@@ -140,7 +139,13 @@ namespace app {
         auto graphics = engine::core::Controller::get<engine::graphics::GraphicsController>();
         auto camera   = graphics->camera();
 
+        const auto &mouse = platform->mouse();
+
         float dt = platform->dt();
+
+        if (mouse.scroll != 0.0) {
+            camera->zoom(mouse.scroll * platform->dt() * 5.0f);
+        }
 
         if (platform->key(engine::platform::KeyId::KEY_W).is_down()) {
             camera->move_camera(engine::graphics::Camera::Movement::FORWARD, dt);
@@ -190,7 +195,6 @@ namespace app {
         graphics->draw_skybox(shader, skybox);
     }
 
-    // TODO: Možda +1 Point light u kući
     void MainController::draw_lights() {
         auto resources = engine::core::Controller::get<engine::resources::ResourcesController>();
         auto shader    = resources->shader("basic");
@@ -203,11 +207,11 @@ namespace app {
         shader->set_vec3("viewPos", camera->Position);
         shader->set_float("shininess", 32.0f);
 
-        // Directional light
+        // Direkciono svetlo
         shader->set_vec3("dirLight.direction", glm::vec3(-0.2f, -1.0f, -0.3f));
         shader->set_vec3("dirLight.color", glm::vec3(1.0f, 1.0f, 1.0f));
 
-        // Point light
+        // Point svetlo
         glm::vec3 lampPos = glm::vec3(2.1f, 1.0f, -7.0f);
         shader->set_vec3("pointLight.position", lampPos);
         shader->set_float("pointLight.constant", 1.0f);
@@ -224,7 +228,7 @@ namespace app {
 
         shader->set_vec3("pointLight.color", chainColor);
 
-        // 2. Point Light
+        // 2. Point svetlo
         glm::vec3 extraLampPos = glm::vec3(0.7f, -1.9f, -9.5f);
         shader->set_vec3("pointLight2.position", extraLampPos);
         if (m_lamp_on)

@@ -11,7 +11,6 @@ namespace engine::platform {
         if (enabled == m_is_fullscreen)
             return;
 
-        // Dohvatanje trenutnog monitora i video moda
         GLFWmonitor *monitor    = glfwGetPrimaryMonitor();
         const GLFWvidmode *mode = glfwGetVideoMode(monitor);
 

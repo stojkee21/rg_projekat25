@@ -22,9 +22,9 @@ namespace app {
             set_enable(new_state);
 
             if (new_state) {
-                platform->set_enable_cursor(true); // Prikaži kursor
+                platform->set_enable_cursor(true);
             } else {
-                platform->set_enable_cursor(false); // Sakrij kursor
+                platform->set_enable_cursor(false);
             }
         }
     }
@@ -44,7 +44,7 @@ namespace app {
         ImGui::Separator();
         ImGui::TextColored(ImVec4(1.0f, 0.8f, 0.2f, 1.0f), "Camera Info");
         ImGui::Separator();
-        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.3f, 0.8f, 1.0f, 1.0f)); // svetloplava boja
+        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.3f, 0.8f, 1.0f, 1.0f));
         ImGui::Text("Position:  (%.2f, %.2f, %.2f)", camera->Position.x, camera->Position.y, camera->Position.z);
         ImGui::PopStyleColor();
 
@@ -52,7 +52,7 @@ namespace app {
         ImGui::Text("Pitch: %.2f°", camera->Pitch);
         ImGui::Separator();
 
-        // WINDOW CONTROLS
+        // WINDOWS CONTROLS
         ImGui::TextColored(ImVec4(1.0f, 0.8f, 0.2f, 1.0f), "Window's Controls");
         ImGui::Separator();
         static bool fullscreen = false;
@@ -73,7 +73,6 @@ namespace app {
         ImGui::InputInt("Width", &new_width);
         ImGui::InputInt("Height", &new_height);
         if (ImGui::Button("Apply Size")) {
-            // Ograničenje širine i visine prozora
             int min_width  = 800;
             int min_height = 600;
 

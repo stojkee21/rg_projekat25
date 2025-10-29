@@ -76,16 +76,16 @@ void main()
 }
 
 
-// DIRECTIONAL LIGHT
+// DIREKCIONO SVETLO
 vec3 calcDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir, vec3 textureColor)
 {
     vec3 lightDir = normalize(-light.direction);
-    // Diffuse
+
     float diff = max(dot(normal, lightDir), 0.0);
-    // Specular
+
     vec3 reflectDir = reflect(-lightDir, normal);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
-    // Combine
+
     vec3 ambient = 0.1 * light.color * textureColor;
     vec3 diffuse = diff * light.color * textureColor;
     vec3 specular = 0.4 * spec * light.color;
@@ -93,19 +93,19 @@ vec3 calcDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir, vec
 }
 
 
-// POINT LIGHT
+// POINT SVETLO
 vec3 calcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 textureColor)
 {
     vec3 lightDir = normalize(light.position - fragPos);
-    // Diffuse
+
     float diff = max(dot(normal, lightDir), 0.0);
-    // Specular
+
     vec3 reflectDir = reflect(-lightDir, normal);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
-    // Attenuation
+
     float distance = length(light.position - fragPos);
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
-    // Combine
+    
     vec3 ambient = 0.05 * light.color * textureColor;
     vec3 diffuse = diff * light.color * textureColor;
     vec3 specular = 0.3 * spec * light.color;
