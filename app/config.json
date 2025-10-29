@@ -1,11 +1,32 @@
 {
   "resources": {
     "models": {
+      "house8": {
+        "path": "house8/highpoly_town_house_01.obj",
+        "flip_uvs": true
+      },
+      "lamp": {
+        "path": "lamp/model.obj",
+        "flip_uvs": true
+      },
+      "stone_floor": {
+        "path": "stone_floor/source/Stone_ground_01.obj",
+        "flip_uvs": true
+      },
+      "lamp1": {
+        "path": "lamp1/streetlamp.obj",
+        "flip_uvs": true
+      }
+    },
+    "skyboxes": {
+      "my_sky": {
+        "path": "my_sky"
+      }
     }
   },
   "window": {
-    "height": 600,
-    "title": "Hello, window!",
-    "width": 800
+    "height": 720,
+    "title": "The Lantern House",
+    "width": 1280
   }
 }
