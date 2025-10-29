@@ -1,5 +1,9 @@
 matf_rg_engine
 
+*.obj
+*.fbx
+*.blend
+
 CMakeLists.txt.user
 CMakeCache.txt
 CMakeFiles
